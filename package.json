@@ -4,7 +4,7 @@
   "description": "a proto2json conversion of riak's proto files",
   "main": "proto.json",
   "devDependencies": {
-    "proto2json": "~0.1.0"
+    "proto2json": "git+http://github.com/nlf/node-proto2json.git"
   },
   "repository": {
     "type": "git",
