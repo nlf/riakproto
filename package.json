@@ -1,0 +1,22 @@
+{
+  "name": "riakproto",
+  "version": "1.4.1",
+  "description": "a proto2json conversion of riak's proto files",
+  "main": "proto.json",
+  "devDependencies": {
+    "proto2json": "~0.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nlf/riakproto.git"
+  },
+  "keywords": [
+    "riak",
+    "protobuf"
+  ],
+  "author": "Nathan LaFreniere <quitlahok@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nlf/riakproto/issues"
+  }
+}
