@@ -1,6 +1,6 @@
 {
   "name": "riakproto",
-  "version": "1.4.1",
+  "version": "1.4.6",
   "description": "a proto2json conversion of riak's proto files",
   "main": "proto.json",
   "devDependencies": {
