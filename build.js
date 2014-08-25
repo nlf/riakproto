@@ -5,7 +5,7 @@ var output = { messages: { }, codes: { } };
 
 function parseFile(filename, callback) {
     var key;
-    var filepath = path.join(__dirname, 'proto', filename);
+    var filepath = path.join(__dirname, 'riak_pb', 'src', filename);
     var file = fs.readFileSync(filepath, 'utf8');
     proto2json.parse(file, function (err, result) {
         for (key in result.messages) {
@@ -16,7 +16,7 @@ function parseFile(filename, callback) {
 }
 
 function parseCsv(callback) {
-    var filepath = path.join(__dirname, 'proto', 'riak_pb_messages.csv');
+    var filepath = path.join(__dirname, 'riak_pb', 'src', 'riak_pb_messages.csv');
     var file = fs.readFileSync(filepath, 'utf8');
     var lines = file.split('\n');
     var i, l, line;
