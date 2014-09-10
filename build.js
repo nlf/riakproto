@@ -1,68 +1,50 @@
 var proto2json = require('proto2json');
 var fs = require('fs');
 var path = require('path');
-var riakProto = fs.readFileSync(path.join(__dirname, 'proto', 'riak.proto'), 'utf8');
-var riakKVProto = fs.readFileSync(path.join(__dirname, 'proto', 'riak_kv.proto'), 'utf8');
-var riakSearchProto = fs.readFileSync(path.join(__dirname, 'proto', 'riak_search.proto'), 'utf8');
-var output = { messages: { } };
+var output = { messages: { }, codes: { } };
 
-output.codes = {
-    '0': 'RpbErrorResp',
-    '1': 'RpbPingReq',
-    '2': 'RpbPingResp',
-    '3': 'RpbGetClientIdReq',
-    '4': 'RpbGetClientIdResp',
-    '5': 'RpbSetClientIdReq',
-    '6': 'RpbSetClientIdResp',
-    '7': 'RpbGetServerInfoReq',
-    '8': 'RpbGetServerInfoResp',
-    '9': 'RpbGetReq',
-    '10': 'RpbGetResp',
-    '11': 'RpbPutReq',
-    '12': 'RpbPutResp',
-    '13': 'RpbDelReq',
-    '14': 'RpbDelResp',
-    '15': 'RpbListBucketsReq',
-    '16': 'RpbListBucketsResp',
-    '17': 'RpbListKeysReq',
-    '18': 'RpbListKeysResp',
-    '19': 'RpbGetBucketReq',
-    '20': 'RpbGetBucketResp',
-    '21': 'RpbSetBucketReq',
-    '22': 'RpbSetBucketResp',
-    '23': 'RpbMapRedReq',
-    '24': 'RpbMapRedResp',
-    '25': 'RpbIndexReq',
-    '26': 'RpbIndexResp',
-    '27': 'RpbSearchQueryReq',
-    '28': 'RpbSearchQueryResp',
-    '29': 'RpbResetBucketReq',
-    '30': 'RpbResetBucketResp',
-    '40': 'RpbCSBucketReq',
-    '41': 'RpbCSBucketResp',
-    '50': 'RpbCounterUpdateReq',
-    '51': 'RpbCounterUpdateResp',
-    '52': 'RpbCounterGetReq',
-    '53': 'RpbCounterGetResp'
+function parseFile(filename, callback) {
+    var key;
+    var filepath = path.join(__dirname, 'riak_pb', 'src', filename);
+    var file = fs.readFileSync(filepath, 'utf8');
+    proto2json.parse(file, function (err, result) {
+        for (key in result.messages) {
+            output.messages[key] = result.messages[key];
+        }
+        callback();
+    });
 }
 
-Object.keys(output.codes).forEach(function (key) {
-    output.codes[output.codes[key]] = Number(key);
-});
+function parseCsv(callback) {
+    var filepath = path.join(__dirname, 'riak_pb', 'src', 'riak_pb_messages.csv');
+    var file = fs.readFileSync(filepath, 'utf8');
+    var lines = file.split('\n');
+    var i, l, line;
+    for (i = 0, l = lines.length; i < l; i++) {
+        line = lines[i].split(',');
+        if (line.length > 1) {
+            output.codes[line[0]] = line[1];
+            output.codes[line[1]] = line[0];
+        }
+    }
+    callback();
+}
 
-proto2json.parse(riakProto, function (err, result) {
-    Object.keys(result.messages).forEach(function (key) {
-        output.messages[key] = result.messages[key];
-    });
-    proto2json.parse(riakKVProto, function (err, result) {
-        Object.keys(result.messages).forEach(function (key) {
-            output.messages[key] = result.messages[key];
-        });
-        proto2json.parse(riakSearchProto, function (err, result) {
-            Object.keys(result.messages).forEach(function (key) {
-                output.messages[key] = result.messages[key];
+function writeFile() {
+    var filepath = path.join(__dirname, 'proto.json');
+    fs.writeFileSync(filepath, JSON.stringify(output), 'utf8');
+}
+
+parseFile('riak.proto', function () {
+    parseFile('riak_dt.proto', function () {
+        parseFile('riak_kv.proto', function () {
+            parseFile('riak_search.proto', function () {
+                parseFile('riak_yokozuna.proto', function () {
+                    parseCsv(function () {
+                        writeFile();
+                    });
+                });
             });
-            fs.writeFileSync('proto.json', JSON.stringify(output), 'utf8');
         });
     });
 });
