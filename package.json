@@ -7,7 +7,9 @@
       "build": "node build.js"
   },
   "devDependencies": {
-    "proto2json": "git+http://github.com/nlf/node-proto2json.git"
+    "async": "^1.5.2",
+    "lodash": "~=3.x.x",
+    "proto2json": "nlf/node-proto2json"
   },
   "repository": {
     "type": "git",
