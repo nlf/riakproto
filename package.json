@@ -1,13 +1,15 @@
 {
   "name": "riakproto",
-  "version": "2.0.0",
+  "version": "2.1.2-0",
   "description": "a proto2json conversion of riak's proto files",
   "main": "proto.json",
   "scripts": {
       "build": "node build.js"
   },
   "devDependencies": {
-    "proto2json": "git+http://github.com/nlf/node-proto2json.git"
+    "async": "^1.5.2",
+    "lodash": "~=3.x.x",
+    "proto2json": "nlf/node-proto2json"
   },
   "repository": {
     "type": "git",
